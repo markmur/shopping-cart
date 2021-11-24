@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   layout,
   flexbox,
@@ -7,8 +7,10 @@ import {
   border,
   fontSize,
   textAlign,
+  boxShadow,
 
   // Types
+  BoxShadowProps,
   TextAlignProps,
   FontSizeProps,
   FlexboxProps,
@@ -18,14 +20,28 @@ import {
   color,
   ColorProps,
   BorderProps,
-  system,
+  system
 } from "styled-system";
 import theme from "./theme";
 
+// Animations
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateX(50%);
+  } to {
+    transform: translate(0);
+  }
+`;
+
 const customDefinitions = system({
   cursor: {
-    property: "cursor",
-  },
+    property: "cursor"
+  }
 });
 
 const lineClamp = (value: string | number) => css`
@@ -44,6 +60,7 @@ const defaults = css`
   ${border};
   ${fontSize};
   ${textAlign};
+  ${boxShadow};
   ${customDefinitions};
   ${(p: any) => p.lineClamp && lineClamp(p.lineClamp)};
 `;
@@ -61,6 +78,7 @@ type Props = FlexboxProps &
   BorderProps &
   FontSizeProps &
   TextAlignProps &
+  BoxShadowProps &
   CustomProps;
 
 export const Flex = styled("div")<Props>`
@@ -87,12 +105,15 @@ export const Button = styled("button")<Props>`
   letter-spacing: 1px;
   font-weight: bold;
   font-size: 11px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.4);
+
+  &:hover {
+    background-color: ${(p: any) => p.backgroundColor || "rgba(0,0,0,0.5)"};
+  }
+  /* box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.4); */
 `;
 
 export const Product = styled("article")<Props>`
   ${defaults};
-  border: 1px solid;
   border-radius: 4px;
   background: white;
 `;
@@ -128,7 +149,7 @@ export const ProductImage = styled.figure<any>`
 
 export const Container = styled.div.attrs({
   maxWidth: 1200,
-  margin: "auto",
+  margin: "auto"
 })<Props>({}, defaults);
 
 export const Overlay = styled.div`
@@ -138,6 +159,7 @@ export const Overlay = styled.div`
   bottom: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.15);
+  animation: ${fadeIn} 200ms ease;
 `;
 
 export const CartDrawer = styled.div<{ open: boolean }>`
@@ -151,6 +173,7 @@ export const CartDrawer = styled.div<{ open: boolean }>`
   box-shadow: -20px 0 20px rgba(0, 0, 0, 0.15);
   z-index: 10;
   display: ${(p) => (p.open ? "block" : "none")};
+  animation: ${slideIn} 300ms ease-out, ${fadeIn} 200ms ease;
 `;
 
 export const Input = styled.input<Props>`
